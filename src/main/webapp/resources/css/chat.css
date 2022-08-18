@@ -1,0 +1,196 @@
+.ChatWrapper {
+	width: 100%;
+	height: 100%;
+}
+.container {
+    margin-top: 100px;
+}
+table {
+    height: 200px;
+}
+td#add6 {
+    text-align: center;
+}
+.cate{
+	text-align:center;
+}
+/*채팅창*/
+#Chatting {
+	width: 100%;
+	height: 750px;
+	background-color: #FFF3E4;.
+	border-radius: 10px;
+	padding : 20px;
+}
+
+.content {
+	width: 100%;
+	height: 5%;
+}
+/*내 대화*/
+.my {
+	text-align: right;
+   	margin-top:10px;
+   	margin:40px;
+}
+/*수정 말풍선*/
+.talk span{
+	position: relative;
+    right: 0;
+    text-align: right;
+    max-width: 100%;
+    padding: 12px;
+    background: #E6CCA9;
+    border-radius: 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+/*상대 대화*/
+.others {
+	text-align: left;
+	margin:40px;
+   	margin-top:10px;
+}
+.inTalk{
+	width: 10px;
+    height: 10px;
+    border-radius: 20px;
+}
+/*수정 말풍선*/
+.others span{
+	text-align: left;
+	background:#fff;
+}
+/*나의 대화 꽁지*/
+.talk span::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -12px;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #E6CCA9 0%, #E6CCA9 50%, transparent 50%, transparent)
+}
+/*상대 대화 꽁지*/
+.talk.others span::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -12px;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(225deg, #fff 0%, #fff 50%, transparent 50%, transparent);
+}
+
+/*채팅 입력란*/
+
+.col-sm-10{
+	position: relative;
+    width: 100%;
+    height: 60px;
+    background:#f0f0f0;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+input#talk {
+    height: 50px;
+}
+.col-sm-10 input
+{
+    position: relative;
+    width: 90%;
+    margin: 0 20px;
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    font-size: 1em;
+}
+.btn{
+	position: relative;
+    width: 10%;
+    cursor:pointer;
+    border-radius: 30px;
+    height: 50px; 
+    background-color:#fff;
+	border:none;
+	color:#575757;
+}
+.btn:hover{
+	background-color:#575757;
+	color:#fff;
+}
+/* 통합 프로필 버튼 */
+.profile{
+	margin:10px;
+	cursor:pointer;
+	margin-left:-35px;
+	color: #111;
+    background-color: #F9F5EB;
+    border-radius: 15px;
+    border-color: #F9F5EB;
+    padding:4px;
+}
+/* 일정등록 버튼 */
+.inTalk{
+	cursor:pointer;
+	margin:10px;
+}
+
+/*내 채팅 프로필 버튼 */
+.my .profile{
+	margin-right:-20px;
+	margin-bottom:6px;
+}
+
+*{margin:0; padding:0;}
+a.button{display:inline-block; padding: 10px 20px; text-decoration:none; color:#fff; background:#000; margin:20px;}
+#modal{
+  display:none;
+  position:fixed; 
+  width:100%; height:100%;
+  top:0; left:0; 
+  background:rgba(0,0,0,0.3);
+}
+.modal-con{
+  display:none;
+  position:fixed;
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  max-width: 60%;
+  min-height: 30%;
+  background:#fff;
+  width: 30%;
+  heigh: 35%;
+}
+.modal-con .title{
+  font-size:20px; 
+  padding: 20px; 
+  background-color : #483434;
+  color : #fff;
+}
+.modal-con .con{
+  font-size:15px; line-height:1.3;
+  padding: 30px;
+}
+.modal-con .close {
+  display:block;
+  position:absolute;
+  width:30px; height:30px;
+  border-radius:50%; 
+  border: 3px solid #000;
+  text-align:center; line-height: 30px;
+  text-decoration:none;
+  color:#000; font-size:20px; font-weight: bold;
+  right:10px; top:10px;
+}
+
+/* alert */
+.swal-footer{
+	text-align: center;
+}
+.swal-text{
+	font-size:20px;
+}

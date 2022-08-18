@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.mapper.ScheduleMapper">
+
+	<insert id="insertCalendar"
+		parameterType="com.smhrd.domain.Schedule">
+
+		insert into calendar (writer,groupId,start,title)
+		values
+		(#{writer},#{groupId},#{start},#{title});
+		</insert>
+
+		<insert id="insertAt" parameterType="com.smhrd.domain.Schedule">
+			insert into attendee_info (at_name)
+			values(#{at_name});
+			
+			</insert>
+			
+			<insert id="insertLoc"
+				parameterType="com.smhrd.domain.Schedule">
+				insert into map_info(loc_name)
+				values(#{loc_name});
+
+			</insert>
+
+			<update id="updateSchedule"
+				parameterType="com.smhrd.domain.Schedule">
+				
+				update calendar 
+				set loc_seq =(select loc_seq from map_info
+												where loc_name=#{loc_name}
+												Order by loc_seq ASC
+												limit 1),
+				at_seq=(select at_seq from attendee_info 
+						where at_name=#{at_name}
+						Order by at_seq ASC
+						limit 1)
+				where id= (select id 
+								from (select id from calendar
+								where writer=#{writer}
+								Order by id DESC
+								limit 1) as mid
+							)
+			</update>
+</mapper>
+   

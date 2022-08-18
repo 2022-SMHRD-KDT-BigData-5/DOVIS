@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <link href='calendar-so.css' rel='stylesheet'>
+    <script src='calendar.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- alert -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.2.0/main.min.js"></script>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- bootstrap 4 -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+    <title> DOVIS CALENDAR </title>
+    <style>
+        /* .swal2-popup{
+            height: 300px;
+        } */
+        a {
+            color: #000;
+        }
+
+        #calendarBox {
+            width: 70%;
+            padding-left: 15%;
+        }
+
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal_body {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            min-width: 400px;
+            min-height: 600px;
+
+            padding: 40px;
+
+            text-align: center;
+
+            background-color: rgb(255, 255, 255);
+            border-radius: 10px;
+            box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        .modal_table {
+            margin: 0px;
+        }
+
+        .modal_table td {
+            padding: 7px;
+            min-width: 200px;
+        }
+
+        .modal_table input {
+            padding-left: 5px;
+        }
+
+        .update,
+        .update2,
+        .delete,
+        .exit {
+            font-size: small;
+            margin-top: 10px;
+            margin-right: 5px;
+            padding: 7px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+    <script>
+
+        var start_date = "";
+        var end_date = "";
+        var content = "";
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                slotMinTime: '08:00', // day 시작 시간
+                slotMaxTime: '18:00', //  day 끝 시간
+                headerToolbar: { // 헤더 툴바 dayGridMonth,listWeek,timeGridDay
+                    left: 'dayGridMonth,listWeek,listDay',
+                    center: 'title',
+                    right: 'prev,next',
+                },
+
+                // customButtons: {
+                //     addEventButton: {
+                //         text: "일정추가",
+                //         click: function () {
+                //             $('#calendarModal').modal("show");
+                //             $('#addCalendar').on("click", function () {
+                //                 var content = $("#calendar_content").val();
+                //                 var start_date = $("#calendar_start_date").val();
+                //                 var end_date = $("#calendar_end_date").val();
+
+                //                 // 내용 입력 여부확인
+                //                 if (content == null || content == "") {
+                //                     alert("내용을 입력하세요");
+                //                 }
+                //                 if (start_date == "" || end_date == "") {
+                //                     alert("날짜를 입력하세요");
+                //                 }
+                //                 if (new Date(end_date) - new Date(start_date) < 0) {
+                //                     alert("종료일이 시작일보다 먼저입니다");
+                //                 } 
+                //                 if(content !=null && start_date != "" && new Date(end_date) - new Date(start_date) >= 0) {
+                //                     var obj = {
+                //                         "title": content,
+                //                         "start": start_date,
+                //                         "end": end_date
+                //                     }
+                //                     console.log(obj);
+
+                //                 }
+                //             })
+                //         }
+                //     }
+                // },
+                buttonText: {
+                    today: 'T',
+                    month: 'M',
+                    week: 'W',
+                    listDay: 'D',
+                    day: '일',
+                    prev: '◀',
+                    next: '▶'
+                },
+                locale: 'ko', // 한국어 설정
+                navLinks: true, // 날짜 선택하면 day, week 링크 기능
+                selectMirror: true,
+                weekNumbers: true, // 주간 넘버링
+                editable: true, // 편집 기능
+                selectable: true, // 드래그 기능
+
+
+                // 일정 데이터 받아오는 곳
+                events: [
+                    {
+                        title: '불금🔥', // 일정내용
+                        start: '2022-07-22' // 일정 시작 날짜 or 일정 날짜 형식 ( 0000-00-00 )
+                    },
+                    {
+                        title: '프로젝트', // 일정내용
+                        start: '2022-07-18', // 일정 시작 날짜 or 일정 날짜 형식 ( 0000-00-00 )
+                        end: '2022-07-22' // 일정 마지막 날짜
+                    },
+                    {
+                        title: '간식', // 일정내용
+                        start: '2022-07-22T13:00', // 일정 시작 날짜 or 일정 날짜 형식 ( 0000-00-00 )
+                        end: '2022-07-22T14:00' // 일정 마지막 날짜
+                    },
+                ],
+
+
+                // // 일정 등록 alert
+                // select: function (arg) {
+                //     let title = Swal.fire({
+                //         title: '일정 내용을 입력해주세요',
+                //         input: 'text',
+                //         inputAttributes: {
+                //             autocapitalize: 'off'
+                //         },
+                //         showLoaderOnConfirm: true,
+                //         showCancelButton: true,
+                //         cancelButtonText: '취소',
+                //         confirmButtonText: '등록',
+                //         preConfirm: (login) => {
+                //             console.log(login)
+                //             con = login;
+                //             return con;
+                //         },
+                //         allowOutsideClick: () => !Swal.isLoading()
+                //     }).then((result) => {
+                //         if (result.isConfirmed) {
+                //             input_con = con;
+                //             console.log(con);
+                //             if (input_con) {
+                //                 calendar.addEvent({
+                //                     title: input_con,
+                //                     start: arg.start,
+                //                     end: arg.end,
+                //                     allDay: arg.allDay
+                //                 })
+                //             }
+                //         }
+                //     })
+                //     calendar.unselect()
+                // },
+
+                // 일정 등록 alert
+
+
+
+                select: function (arg) {
+
+                    $('#calendarModal').modal("show");
+                    document.querySelector("#calendar_start_date").addEventListener("change", function () {
+                        start_date = $("#calendar_start_date").val();
+                    })
+                    document.querySelector("#calendar_content").addEventListener("change", function () {
+                        content = $("#calendar_content").val();
+                    })
+                    document.querySelector("#calendar_end_date").addEventListener("change", function () {
+                        end_date = $("#calendar_end_date").val();
+                    })
+
+                    $('#addCalendar').on("click", function () {
+
+                        // 내용 입력 여부확인
+                        if (content == null || content == "") {
+                            alert("내용을 입력하세요");
+                        }
+                        if (start_date == "" || end_date == "") {
+                            alert("날짜를 입력하세요");
+                        }
+                        if (new Date(end_date) - new Date(start_date) < 0) {
+                            alert("종료일이 시작일보다 먼저입니다");
+                        }
+                        if (content != null && start_date != "" && new Date(end_date) - new Date(start_date) >= 0) {
+                            console.log("Ccc", content)
+                            var obj = {
+                                "title": content,
+                                "start": start_date,
+                                "end": end_date
+                            }
+                            console.log(obj);
+                            calendar.addEvent({
+                                title: content,
+                                start: start_date,
+                                end: end_date
+                            })
+                            calendar.unselect()
+                        }
+                        $("#calendar_content").val("")
+                        $("#calendar_start_date").val(" ")
+                        $("#calendar_end_date").val(" ")
+
+                        content = null;
+                        start_date = null;
+                        end_date = null;
+
+                        $('#calendarModal').modal("hide");
+                    })
+
+
+                },
+
+                // // 일정 수정
+                // eventDrop: function (arg) {
+                //     console.log(arg);
+                //     if (Swal.fire({
+                //         title: '일정을 수정하시겠습니까?',
+                //         text: "▸ " + arg.event.title + " ◂",
+                //         confirmButtonText: '네',
+                //         cancelButtonText: '아니오',
+                //         confirmButtonColor: '#3085d6',
+                //         cancelButtonColor: '#d33',
+                //         showCancelButton: true,
+                //     }).then((result) => {
+                //         if (result.isConfirmed) {
+                //             Swal.fire({
+                //                 title: '수정이 완료되었습니다.'
+                //             })
+                //         }
+                //     })
+                //     ) { }
+                // },
+
+                // 일정 삭제
+                eventDrop: function (arg) {
+                    console.log(arg);
+                    if (Swal.fire({
+                        title: '일정을 삭제하시겠습니까?',
+                        text: "▸ " + arg.event.title + " ◂",
+                        confirmButtonText: '네',
+                        cancelButtonText: '아니오',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        showCancelButton: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            arg.event.remove() /* 일정 삭제 */
+                            Swal.fire({
+                                title: '삭제가 완료되었습니다.'
+                            })
+                        }
+                    })
+                    ) { }
+                },
+
+                // // 일정 삭제 alert
+                // eventClick: function (arg) {
+                //     if (Swal.fire({
+                //         title: '일정을 삭제하시겠습니까?',
+                //         text: "▸ " + arg.event.title + " ◂",
+                //         confirmButtonText: '네',
+                //         cancelButtonText: '아니오',
+                //         confirmButtonColor: '#3085d6',
+                //         cancelButtonColor: '#d33',
+                //         showCancelButton: true,
+                //     }).then((result) => {
+                //         if (result.isConfirmed) {
+                //             arg.event.remove() /* 일정 삭제 */
+                //             Swal.fire({
+                //                 title: "' " + arg.event.title + " ' ",
+                //                 text: '일정이 삭제되었습니다'
+                //             })
+                //         }
+                //     })
+                //     ) { }
+                // }
+
+
+                // 일정 상세보기
+                eventClick: function (arg) {
+                    $('#list_modal').modal("show");
+                    $("#calendar_title").text(arg.event.title);
+                    $("#meeting_date").text(arg.event.start);
+
+                    $('.delete').on("click", function () {
+                        if (Swal.fire({
+                            title: "▸ " + arg.event.title + " ◂",
+                            text: "일정을 삭제하시겠습니까?",
+                            confirmButtonText: '삭제',
+                            cancelButtonText: '아니오',
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            showCancelButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                arg.event.remove() /* 일정 삭제 */
+                                Swal.fire({
+                                    title: "' " + arg.event.title + " ' ",
+                                    text: '일정이 삭제되었습니다'
+                                })
+                            }
+                        })
+                        ) { }
+                        $('#list_modal').modal("hide");
+                    })
+                    $('.update').on("click", function () { // 수정 버튼
+                        var title = arg.event.title;
+                        $("#calendar_title").html("<input id='set_title' type='text' placeholder='" + title + "' value=''>");
+                        $('#cate').html('구분 : <select><option value="외부회의">외부회의</option><option value="내부회의">내부회의</option><option value="제출">제출</option></select>');
+                        $('#meeting_content').html("일정내용 : <input id='set_con' type='text' value='' name='' placeholder=''>");
+                        $('#meeting_pe').html("<input id='set_info' type='text'>");
+                        // $('#meeting_date').html("<input type='datetime-local'>");
+                        $('#meeting_place').html("<input type='text' id='set_place'>");
+                        // $('#map').html();
+                    })
+                    
+                    $('.update2').on("click", function () { // 수정완료 버튼
+                        
+                        // console.log("수정1", $("#set_con").val())
+                        // console.log("업데이트된 타이틀", $('#set_title').val())
+                        var title = arg.event.title;
+                        var update_title = $('#set_title').val();
+                        console.log("기존 타이틀 : ",title);
+                        console.log("업데이트된 타이틀 : ",update_title);
+
+                        title = update_title;
+
+                        console.log("잘들어왔나?",title);
+                        
+                        
+                        // title = null;
+                        // update_title = null;
+                        $('#list_modal').modal("hide");
+                        
+                    })
+                    $('.exit').on("click", function () {
+                        $('#list_modal').modal("hide");
+                    })
+                    // 수정된 데이터 캘린더에 업데이트 하기
+                    // 풀캘린더 업데이트 함수... 도대체 뭐냐거...
+                    // 도대체 뭐지.. 왜 없지... 왜 다들 안쓰는거지? 왜 다 드래그엔드롭이냐거어어 ㅠㅠㅠ
+                    
+                }
+            });
+            calendar.render();
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <i class='bx bxs-ghost bx-spin' style='color:#859bfd'></i>
+                <div class="logo_name">Dovis</div>
+            </div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav_list">
+            <li>
+                <a href="home.html">
+                    <i class='bx bx-home-alt-2'></i>
+                    <span class="link_name">home</span>
+                </a>
+                <span class="tooltip">home</span>
+            </li>
+            <li>
+                <a href="calendar.html">
+                    <i class='bx bx-calendar'></i>
+                    <span class="link_name">calendar</span>
+                </a>
+                <span class="tooltip">calendar</span>
+            </li>
+            <li>
+                <a href="catting.html">
+                    <i class='bx bx-chat'></i>
+                    <span class="link_name">message</span>
+                </a>
+                <span class="tooltip">message</span>
+            </li>
+            <li>
+                <a href="setting.html">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">setting</span>
+                </a>
+                <span class="tooltip">setting</span>
+            </li>
+            <li>
+                <a href="logout.html">
+                    <i class='bx bx-exit'></i>
+                    <span class="link_name">logout</span>
+                </a>
+                <span class="tooltip">logout</span>
+            </li>
+        </ul>
+    </div>
+    <div class="home_content">
+        <div class="text">
+
+            <div id='calendar'></div>
+
+            <!-- 상세 일정 modal 추가-->
+            <div class="modal" id="list_modal">
+                <div class="modal_body" aria-hidden="true">
+                    <div class="modal_table">
+                        <table border="1px soild">
+                            <tr>
+                                <td colspan="2" id="calendar_title"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" id="cate" align="left">구분</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" id="meeting_date"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" id="meeting_content" align="left">일정내용</td>
+                            </tr>
+                            <tr>
+                                <td>상대 정보</td>
+                                <td id="meeting_pe"></td>
+                            </tr>
+                            <tr>
+                                <td>장소</td>
+                                <td id="meeting_place"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" height="200px"></td>
+                            </tr>
+                            <tr>
+                                <td>총 거리</td>
+                                <td id="map"></td>
+                            </tr>
+                            <tr>
+                                <td>소요시간</td>
+                                <td id="lead_time"></td>
+                            </tr>
+                        </table>
+                        <button class="update">수정</button>
+                        <button class="update2">수정완료</button>
+                        <button class="delete">삭제</button>
+                        <button class="exit">나가기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- modal 추가 -->
+
+
+
+            <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">일정 추가</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="taskId" class="col-form-label">일정 내용</label>
+                                <input type="text" class="form-control" id="calendar_content" name="calendar_content"
+                                    placeholder="내용을 입력하세요">
+                                <label for="taskId" class="col-form-label">시작 날짜</label>
+                                <input type="datetime-local" class="form-control" id="calendar_start_date"
+                                    name="calendar_start_date">
+                                <label for="taskId" class="col-form-label">종료 날짜</label>
+                                <input type="datetime-local" class="form-control" id="calendar_end_date"
+                                    name="calendar_end_date">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" id="addCalendar">추가</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                id="sprintSettingModalClose">취소</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <script>
+        let btn = document.querySelector("#btn");
+        let sidebar = document.querySelector(".sidebar");
+
+        btn.onclick = function () {
+            sidebar.classList.toggle("active");
+        }
+
+    </script>
+</body>
+
+</html>

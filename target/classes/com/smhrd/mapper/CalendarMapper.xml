@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.mapper.CalendarMapper">
+
+	<!-- <resultMap type="com.smhrd.domain.Calendar" id="calMap"> <result property="start" 
+		column="start1"/> <result property="end" column="end1"/> </resultMap> <select 
+		id="calenList" resultMap="calMap"> SELECT id, title, TO_char(start1, 'YYYY-MM-DD"T"HH24:MI:SS') 
+		start1, TO_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS') end1, ALLDAY FROM CALENDAR_TEST 
+		</select> -->
+	<!-- <select id="calenList" resultMap="calMap"> SELECT id, title, start1, 
+		end1, ALLDAY FROM calendar_test </select> -->
+	<!-- <resultMap type="com.smhrd.domain.Calendar" id="calMap"> <result property="start" 
+		column="start1"/> <result property="end" column="end1"/> </resultMap> -->
+	<!-- <select id="calenList" resultMap="calMap"> SELECT id, title, date_format(start1, 
+		'%Y-%m-%d') start1, date_format(end1, '%Y-%m-%d') end1, allDay FROM calendar 
+		</select> <select id="calenList" resultMap="calMap"> -->
+
+	<!-- <resultMap type="com.smhrd.domain.Calendar" id="calMap"> <result property="start" 
+		column="start1"/> <result property="end" column="end1"/> </resultMap> <select 
+		id="calenList" resultMap="calMap"> SELECT id, groupId, title, writer, content, 
+		date_format(start1, '%Y-%m-%d') start1, date_format(end1, '%Y-%m-%d') end1, 
+		allDay FROM calendar </select> -->
+	<!-- <select id="calenList" parameterType="com.smhrd.domain.Calendar" resultType="com.smhrd.domain.Calendar"> 
+		SELECT id, groupId, title, writer, content, start, end, allDay FROM calendar 
+		</select> -->
+	<select id="calenList" parameterType="com.smhrd.domain.Calendar"
+		resultType="com.smhrd.domain.Calendar">
+		SELECT * FROM calendar
+	</select>
+
+	<!-- 일정등록 -->
+	<!-- <insert id = "insertC" parameterType="com.smhrd.domain.Calendar"> insert 
+		into calendar (title, writer, start1, end1, allDay) values (#{title}, #{writer}, 
+		#{start}, #{end}, #{allDay) </insert> -->
+	<insert id="insertC" parameterType="com.smhrd.domain.Calendar">
+
+		insert into calendar (title,
+		writer, start, end, allDay)
+		values (#{title}, #{writer}, #{start},
+		#{end}, #{allDay})
+
+	</insert>
+
+	<insert id="inserttodo"
+		parameterType="com.smhrd.domain.Calendar">
+		insert into calendar (title, writer, start)
+		values
+		(#{title}, #{writer}, now())
+	</insert>
+
+	<!-- 일정 상세페이지 조회 -->
+	<!-- <select id="selectC" parameterType="com.smhrd.domain.Calendar" resultType="com.smhrd.domain.Calendar"> 
+		select * from calendar where id = #{id} </select> -->
+	<!-- 일정 상세페이지 조회용 참석자 이력과 장소 이름 가져오기 -->
+	<select id="selectC" parameterType="com.smhrd.domain.Calendar"
+		resultType="com.smhrd.domain.Calendar">
+		select c.*, m.loc_name, a.at_name, a.at_company, a.at_dept,
+		a.at_position
+		from calendar c
+		left outer join attendee_info a on c.at_seq = a.at_seq
+		left outer join map_info m on c.loc_seq = m.loc_seq
+		where c.id = #{id}
+	</select>
+
+	<!-- 일정 상세페이지 업데이트 -->
+<!-- 	<update id="updateC" parameterType="com.smhrd.domain.Calendar">
+		update calendar set title=#{title} where id=#{id}
+		update map_info set loc_name =#{loc_name} where loc_seq = #{loc_seq}
+		update attendee_info set at_name = #{at_name} where at_seq = #{at_seq}
+	</update> -->
+	<!-- 일정 상세페이지 업데이트 -->
+	<update id="updateC" parameterType="com.smhrd.domain.Calendar">
+		update calendar
+			set loc_seq = (select loc_seq from map_info where loc_name= #{loc_name} order by loc_seq asc limit 1),
+			at_seq= (select at_seq from attendee_info where at_name= #{at_name} order by at_seq asc limit 1),
+			title = #{title}
+			where id = #{id}	
+	</update> 
+	<update id ="cateup" parameterType="com.smhrd.domain.Calendar">
+	    update calendar
+	    	set groupId = #{groupId}, start = #{start}, end =#{end}
+	    where id = #{id}	
+	</update>
+	
+
+
+	<!-- 상세일정 위해 장소 이름 가져오기 -->
+	<!-- <select id ="selectLNA" resultType="com.smhrd.domain.Calendar"> select 
+		c.loc_seq, m.loc_name, m.loc_addr from calendar c, map_info m where c.loc_seq 
+		= m.loc_seq and c.id = #{id}; </select> -->
+		<select id="calCheck" resultType="com.smhrd.domain.Calendar">
+		    select * from calendar where id = #{id}		    
+		</select>
+ 
+</mapper>
