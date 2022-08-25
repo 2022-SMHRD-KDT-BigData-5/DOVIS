@@ -22,7 +22,7 @@
 |------|---|
 |사용언어|Spring Framework, HTML, CSS, JavaScript, Python|
 |사용한 라이브러리| Tensorflow, Pytorch / etc...|
-|개발도구|-government framework 3.xx / JupyterNotebook 6.4.12 / Colab/ VisualStudioCode  / etc...|
+|개발도구|E-government framework 3.xx / JupyterNotebook 6.4.12 / Colab/ VisualStudioCode  / etc...|
 |서버환경|tomcat 8.5, Flask|
 |데이터베이스| MySQL|
 
